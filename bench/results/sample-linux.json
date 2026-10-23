@@ -1,0 +1,140 @@
+{
+  "measured_at_utc": "2026-10-23T17:28:06.488999+00:00",
+  "environment": {
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "logical_cpu_count": 9,
+    "python": "3.12.14",
+    "sqlite": "3.53.1",
+    "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "build_flags": "-O2 -g -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread",
+    "filesystem_block_size": 4096,
+    "temporary_directory_storage": "host default temp directory"
+  },
+  "dataset": {
+    "rows": 2000,
+    "seed": 20261023,
+    "categories": 12,
+    "synthetic": true
+  },
+  "method": {
+    "query": "SELECT category, COUNT(*) FROM events WHERE timestamp >= ? AND timestamp <= ? GROUP BY category ORDER BY category",
+    "index": "primary key only; no timestamp/category index",
+    "warmup_queries": 1,
+    "timed_repetitions": 7,
+    "durability": "eventstore fsync per event; SQLite DELETE journal and FULL synchronous per commit",
+    "timing_limits": "Queries timed inside each process after warmup; C++ open validates every frame, SQLite connect is lazy. Ingest timings differ: C++ includes CLI creation/TSV/JSON acknowledgments; SQLite excludes schema setup. Storage cache is not evicted. This is not an engine ranking or a power-loss test."
+  },
+  "write_seconds": {
+    "eventstore_cli": 0.5438337599998704,
+    "sqlite_python": 2.291735529000107
+  },
+  "file_bytes": {
+    "eventstore": 254906,
+    "sqlite": 200704
+  },
+  "queries": [
+    {
+      "inclusive_window": [
+        -1000,
+        1000
+      ],
+      "matching_rows": 2000,
+      "eventstore": {
+        "open_seconds": 0.00201433,
+        "query_seconds": [
+          0.00221449,
+          0.00154347,
+          0.00143875,
+          0.00165681,
+          0.00148853,
+          0.00201503,
+          0.00170672
+        ],
+        "median_query_seconds": 0.00165681
+      },
+      "sqlite": {
+        "open_seconds": 0.00014391700005944585,
+        "query_seconds": [
+          0.00040056299985735677,
+          0.0003562659994713613,
+          0.0003268919999754871,
+          0.0003569470000002184,
+          0.0003410030003578868,
+          0.00039742800072417594,
+          0.00036949600053048925
+        ],
+        "median_query_seconds": 0.0003569470000002184
+      },
+      "reference_equal": true
+    },
+    {
+      "inclusive_window": [
+        -100,
+        100
+      ],
+      "matching_rows": 175,
+      "eventstore": {
+        "open_seconds": 0.00137027,
+        "query_seconds": [
+          0.00136596,
+          0.00175105,
+          0.0015192,
+          0.00141343,
+          0.00159417,
+          0.00139465,
+          0.00141608
+        ],
+        "median_query_seconds": 0.00141608
+      },
+      "sqlite": {
+        "open_seconds": 0.00011883899969689082,
+        "query_seconds": [
+          0.00033477400029369164,
+          0.00010866400043596514,
+          9.642500026529888e-05,
+          0.0001021939997372101,
+          9.124799998971866e-05,
+          9.993000003305497e-05,
+          9.146699994744267e-05
+        ],
+        "median_query_seconds": 9.993000003305497e-05
+      },
+      "reference_equal": true
+    },
+    {
+      "inclusive_window": [
+        0,
+        0
+      ],
+      "matching_rows": 0,
+      "eventstore": {
+        "open_seconds": 0.0016108,
+        "query_seconds": [
+          0.0014116,
+          0.00145747,
+          0.00151606,
+          0.00161485,
+          0.00146202,
+          0.0014514,
+          0.00275002
+        ],
+        "median_query_seconds": 0.00146202
+      },
+      "sqlite": {
+        "open_seconds": 8.402700041187927e-05,
+        "query_seconds": [
+          7.861900030547986e-05,
+          7.619499956490472e-05,
+          6.733200007147389e-05,
+          7.379100043181097e-05,
+          6.538799971167464e-05,
+          7.322000055864919e-05,
+          6.481699983851286e-05
+        ],
+        "median_query_seconds": 7.322000055864919e-05
+      },
+      "reference_equal": true
+    }
+  ]
+}
