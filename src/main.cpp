@@ -74,6 +74,7 @@ int main(int argc, char** argv) {
             else for (const auto& [category, count] : store.counts(filter))
                 std::cout << "{\"category\":" << eventstore::json_string(category) << ",\"count\":" << count << "}\n";
         } else { usage(); return 2; }
+        std::cout.flush();
         if (!std::cout) throw std::runtime_error("output failed");
         return 0;
     } catch (const std::exception& error) {

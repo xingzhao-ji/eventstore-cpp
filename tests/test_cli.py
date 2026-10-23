@@ -58,6 +58,23 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(self.path.read_bytes(), original)
         self.run_cli("query", self.path, 100, 0, ok=False)
 
+    @unittest.skipUnless(sys.platform.startswith("linux") and Path("/dev/full").exists(),
+                         "requires Linux /dev/full")
+    def test_counts_reports_buffered_output_failure(self):
+        self.append(category="first")
+        self.append(category="second")
+        before = self.path.read_bytes()
+        try:
+            sink = open("/dev/full", "wb")
+        except OSError as error:
+            self.skipTest(f"cannot open /dev/full: {error}")
+        with sink:
+            proc = subprocess.run([str(BIN), "counts", str(self.path), str(-(2**63)), str(2**63 - 1)],
+                                  stdout=sink, stderr=subprocess.PIPE, text=True, timeout=10)
+        self.assertEqual(proc.returncode, 1, "buffered output failure must not report success")
+        self.assertIn("output failed", proc.stderr)
+        self.assertEqual(self.path.read_bytes(), before)
+
     def test_inclusive_filter_and_group_counts_match_reference(self):
         rng = random.Random(810)
         data = [(rng.randint(-20, 20), rng.choice(["a", "b", "c"]), i, f"event-{i}")
